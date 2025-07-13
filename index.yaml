@@ -1,0 +1,30 @@
+apiVersion: v1
+entries:
+  helm-hive-metastore:
+  - apiVersion: v2
+    appVersion: 4.0.1
+    created: "2025-07-13T15:42:18.35786716Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.x.x
+    description: A Helm chart to deploy Hive Metastore
+    digest: 407aca00a35c70018b60fa54eabf71c2de21a597d4951f3b343093cc39c6d1ef
+    home: https://github.com/fozdoiguassu/helm-charts
+    keywords:
+    - hive
+    - metastore
+    maintainers:
+    - name: Heva
+      url: https://wwww5.pmfi.pr.gov.br
+    name: helm-hive-metastore
+    sources:
+    - https://github.com/apache/hive
+    - https://github.com/ssl-hep/hive-metastore/
+    - https://github.com/HEVAWEB/heva-helm-charts
+    type: application
+    urls:
+    - https://github.com/fozdoiguassu/helm-charts/releases/download/helm-hive-metastore-0.1.0/helm-hive-metastore-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-07-13T15:42:18.357879273Z"
