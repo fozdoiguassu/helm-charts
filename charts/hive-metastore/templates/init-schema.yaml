@@ -11,24 +11,40 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         command: ["/bin/sh", "-c"]
         args:
-          - schematool
-           --verbose
-           -initSchema
-           -ifNotExists
-           -dbType postgres
-           -userName "{{- .Values.connections.database.username }}"
-           -passWord "$DATABASE_PASSWORD"
-           -url "jdbc:postgresql://{{- tpl .Values.connections.database.host . }}:{{- .Values.connections.database.port }}/{{- .Values.connections.database.database }}"
+          - |
+            if schematool -dbType postgres -validate -userName "$DATABASE_USER" -passWord "$DATABASE_PASSWORD" -url "jdbc:postgresql://{{- tpl .Values.connections.database.host . }}:{{- .Values.connections.database.port }}/{{- .Values.connections.database.database }}" | grep 'Done with metastore validation' | grep '[SUCCESS]'; then
+              echo "Database OK"
+            else
+              echo "Validation failed, initializing schema..."
+              schematool \
+                --verbose \
+                -initSchema \
+                -dbType postgres \
+                -userName "$DATABASE_USER" \
+                -passWord "$DATABASE_PASSWORD" \
+                -url "jdbc:postgresql://{{- tpl .Values.connections.database.host . }}:{{- .Values.connections.database.port }}/{{- .Values.connections.database.database }}"
+            fi
         volumeMounts:
         - name: hive-config
           mountPath: /opt/hive-metastore/conf
         env:
           {{- if .Values.extraEnvVars }}
-          {{- .Values.extraEnvVars | nindent 12 }}
+          {{- .Values.extraEnvVars | nindent 10 }}
           {{- end }}
-          {{- if .Values.connections.database.password }}
+          {{- if .Values.connections.database.existingSecret.name }}
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.connections.database.existingSecret.name }}
+                key: {{ .Values.connections.database.existingSecret.usernameKey }}
           - name: DATABASE_PASSWORD
-            value: "{{- .Values.connections.database.password }}"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.connections.database.existingSecret.name }}
+                key: {{ .Values.connections.database.existingSecret.passwordKey }}
+          {{- else }}
+          - name: DATABASE_USER
+            value: "{{- .Values.connections.database.username }}"
           {{- end }}
         {{- if .Values.extraEnvVarsSecret }}
         envFrom:

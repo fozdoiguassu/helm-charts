@@ -45,11 +45,20 @@ spec:
               value: "{{- tpl .Values.connections.database.host . }}"
             - name: DATABASE_DB
               value: "{{- .Values.connections.database.database }}"
+            {{- if .Values.connections.database.existingSecret.name }}
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.connections.database.existingSecret.name }}
+                  key: {{ .Values.connections.database.existingSecret.usernameKey }}
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.connections.database.existingSecret.name }}
+                  key: {{ .Values.connections.database.existingSecret.passwordKey }}
+            {{- else }}
             - name: DATABASE_USER
               value: "{{- .Values.connections.database.username }}"
-            {{- if .Values.connections.database.password }}
-            - name: DATABASE_PASSWORD
-              value: "{{- .Values.connections.database.password }}"
             {{- end }}
             {{- if .Values.extraEnvVars }}
             {{- .Values.extraEnvVars | nindent 12 }}
