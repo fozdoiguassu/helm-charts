@@ -8,9 +8,9 @@
 ## @param image.pullPolicy Docker image pull policy
 ## @param image.tag Docker image tag (immutable tags are recommended)
 image:
-  repository: fozdoiguassu/hive-metastore
+  repository: ghcr.io/fozdoiguassu/hive-metastore
   pullPolicy: IfNotPresent
-  tag: "0.1.0"
+  tag: "v0.1.0"
 
 ## @param imagePullSecrets Docker registry secret names as an array
 imagePullSecrets: []
