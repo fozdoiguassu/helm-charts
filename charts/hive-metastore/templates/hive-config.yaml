@@ -14,14 +14,15 @@ data:
           <name>metastore.expression.proxy</name>
           <value>org.apache.hadoop.hive.metastore.DefaultPartitionExpressionProxy</value>
         </property>
+
         <property>
           <name>metastore.task.threads.always</name>
           <value>org.apache.hadoop.hive.metastore.events.EventCleanerTask</value>
         </property>
 
         <property>
-          <name>hive.metastore.warehouse.dir</name>
-          <value>file:///opt/hive/warehouse</value>
+            <name>metastore.thrift.port</name>
+            <value>{{- .Values.service.port }}</value>
         </property>
 
         <!--Postgres' connection details -->
@@ -47,32 +48,19 @@ data:
         </property>
 
         <property>
-          <name>hive.metastore.uris</name>
-          <value>thrift://localhost:{{- .Values.service.port }}</value>
-        </property>
-
-        <property>
-            <name>hive.server2.transport.mode</name>
-            <value>http</value>
-        </property>
-
-        <property>
-            <name>hive.server2.thrift.http.port</name>
-            <value>{{- .Values.service.port }}</value>
-        </property>
-
-        <property>
-            <name>hive.server2.thrift.http.path</name>
-            <value>cliservice</value>
-        </property>
-
-        <property>
             <name>hive.server2.authentication</name>
             <value>NOSASL</value>
         </property>
+
         <property>
           <name>hive.metastore.sasl.enabled</name>
           <value>false</value>
+        </property>
+
+        <property>
+            <name>hive.server2.enable.doAs</name>
+            <value>false</value>
+            <description>Impedir que o Hive execute comandos como o usuário conectado</description>
         </property>
 
         <!--Object Store connection Info -->
@@ -105,6 +93,21 @@ data:
         <property>
             <name>fs.s3a.path.style.access</name>
             <value>{{- .Values.objectStore.pathStyle}}</value>
+        </property>
+
+        <property>
+            <name>fs.s3a.multipart.threshold</name>
+            <value>5m</value>
+        </property>
+
+        <property>
+            <name>fs.s3a.fast.upload</name>
+            <value>true</value>
+        </property>
+
+        <property>
+            <name>fs.defaultFS</name>
+            <value>{{- .Values.objectStore.defaultFS }}</value>
         </property>
 
         <property>
