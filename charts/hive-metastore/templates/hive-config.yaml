@@ -27,38 +27,23 @@ data:
         <!--Postgres' connection details -->
         <property>
           <name>javax.jdo.option.ConnectionURL</name>
-          <value>jdbc:postgresql://{{- tpl .Values.connections.database.host . }}/{{- .Values.connections.database.database }}</value>
+          <value>jdbc:postgresql://{{- tpl .Values.connections.database.host . }}:{{- .Values.connections.database.port }}/{{- .Values.connections.database.database }}</value>
         </property>
         <property>
           <name>javax.jdo.option.ConnectionDriverName</name>
           <value>org.postgresql.Driver</value>
         </property>
+
         <property>
           <name>javax.jdo.option.ConnectionUserName</name>
-          {{- if .Values.connections.database.existingSecret.name }}
-          <valueFrom>
-            <secretKeyRef>
-              <name>{{ .Values.connections.database.existingSecret.name }}</name>
-              <key>{{ .Values.connections.database.existingSecret.usernameKey }}</key>
-            </secretKeyRef>
-          </valueFrom>
-          {{- else }}
-          <value>{{- .Values.connections.database.username }}</value>
-          {{- end }}
+          <value>{{- if .Values.connections.database.existingSecret.name }}$DATABASE_USER{{- else }}{{- .Values.connections.database.username }}{{- end }}</value>
         </property>
+
         <property>
           <name>javax.jdo.option.ConnectionPassword</name>
-          {{- if .Values.connections.database.existingSecret.name }}
-          <valueFrom>
-            <secretKeyRef>
-              <name>{{ .Values.connections.database.existingSecret.name }}</name>
-              <key>{{ .Values.connections.database.existingSecret.passwordKey }}</key>
-            </secretKeyRef>
-          </valueFrom>
-          {{- else }}
-          <value>{{- .Values.connections.database.password }}</value>
-          {{- end }}
+          <value>{{- if .Values.connections.database.existingSecret.name }}$DATABASE_PASSWORD{{- else }}{{- .Values.connections.database.password }}{{- end }}</value>
         </property>
+
         <property>
           <name>datanucleus.autoCreateSchema</name>
           <value>false</value>
@@ -169,4 +154,3 @@ data:
     rootLogger.level = {{- .Values.log.level.root }} 
     rootLogger.appenderRefs = console
     rootLogger.appenderRef.console.ref = consoleLogger
-

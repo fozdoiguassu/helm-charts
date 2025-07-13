@@ -34,10 +34,18 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - "/bin/sh"
-            - "-c"
-            - "hive --service metastore"
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              # O arquivo de configuração original do ConfigMap é montado como somente leitura.
+              # Copiamos para um local gravável, substituímos as variáveis e o usamos.
+              CONFIG_SRC=/opt/hive/conf-template/hive-site.xml
+              CONFIG_DST=/opt/hive/conf/hive-site.xml
+
+              envsubst '$DATABASE_USER,$DATABASE_PASSWORD' < "$CONFIG_SRC" > "$CONFIG_DST"
+
+              hive --service metastore
           env:
             - name: SERVICE_NAME
               value: metastore
@@ -78,8 +86,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: hive-config
-              mountPath: /opt/hive/conf
-              readOnly: true
+              mountPath: /opt/hive/conf-template
             - name: warehouse-dir
               mountPath: /opt/hive/warehouse
             {{- if .Values.extraVolumeMounts }}
