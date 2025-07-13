@@ -71,30 +71,30 @@ data:
             <value>{{- .Values.objectStore.sslEnabled }}</value>
         </property>
 
-        {{- if .Values.objectStore.endpoint }}
+        {{- if or .Values.objectStore.endpoint .Values.objectStore.existingSecret.name }}
         <property>
             <name>fs.s3a.endpoint</name>
-            <value>{{- .Values.objectStore.endpoint }}</value>
+            <value>{{- if .Values.objectStore.existingSecret.name }}$OBJECT_STORE_ENDPOINT{{- else }}{{- .Values.objectStore.endpoint }}{{- end }}</value>
         </property>
         {{- end }}
 
-        {{- if .Values.objectStore.accessKeyId }}
+        {{- if or .Values.objectStore.accessKeyId .Values.objectStore.existingSecret.name }}
         <property>
             <name>fs.s3a.access.key</name>
-            <value>{{- .Values.objectStore.accessKeyId }}</value>
+            <value>{{- if .Values.objectStore.existingSecret.name }}$OBJECT_STORE_ACCESS_KEY_ID{{- else }}{{- .Values.objectStore.accessKeyId }}{{- end }}</value>
         </property>
         {{- end }}
 
-        {{- if .Values.objectStore.secretAccessKey }}
+        {{- if or .Values.objectStore.secretAccessKey .Values.objectStore.existingSecret.name }}
         <property>
             <name>fs.s3a.secret.key</name>
-            <value>{{- .Values.objectStore.secretAccessKey }}</value>
+            <value>{{- if .Values.objectStore.existingSecret.name }}$OBJECT_STORE_SECRET_ACCESS_KEY{{- else }}{{- .Values.objectStore.secretAccessKey }}{{- end }}</value>
         </property>
         {{- end }}
 
         <property>
             <name>fs.s3a.path.style.access</name>
-            <value>{{- .Values.objectStore.pathStyle}}</value>
+            <value>{{- .Values.objectStore.pathStyle }}</value>
         </property>
 
         <property>

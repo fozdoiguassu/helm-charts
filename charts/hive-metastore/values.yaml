@@ -168,12 +168,22 @@ objectStore:
 
   ## @param objectStore.endpoint Value of fs.s3a.endpoint in hive-site.xml file
   endpoint:
-
+  
   ## @param objectStore.accessKeyId Value of fs.s3a.access.key in hive-site.xml file
   accessKeyId:
 
   ## @param objectStore.secretAccessKey Value of fs.s3a.secret.key in hive-site.xml file
   secretAccessKey:
+  
+  ## @param objectStore.existingSecret.name Name of the secret containing the object store credentials
+  ## @param objectStore.existingSecret.endpointKey Key in the secret for the object store endpoint
+  ## @param objectStore.existingSecret.accessKeyIdKey Key in the secret for the access key ID
+  ## @param objectStore.existingSecret.secretAccessKeyKey Key in the secret for the secret access key
+  existingSecret:
+    name: ""
+    endpointKey: "endpoint"
+    accessKeyIdKey: "accessKeyId"
+    secretAccessKeyKey: "secretAccessKey"
 
   ## @param objectStore.pathStyle [default: true] Value of fs.s3a.path.style.access in hive-site.xml file
   pathStyle: true

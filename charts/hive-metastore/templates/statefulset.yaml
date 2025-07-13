@@ -68,6 +68,23 @@ spec:
             - name: DATABASE_USER
               value: "{{- .Values.connections.database.username }}"
             {{- end }}
+            {{- if .Values.objectStore.existingSecret.name }}
+            - name: OBJECT_STORE_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStore.existingSecret.name }}
+                  key: {{ .Values.objectStore.existingSecret.endpointKey }}
+            - name: OBJECT_STORE_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStore.existingSecret.name }}
+                  key: {{ .Values.objectStore.existingSecret.accessKeyIdKey }}
+            - name: OBJECT_STORE_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStore.existingSecret.name }}
+                  key: {{ .Values.objectStore.existingSecret.secretAccessKeyKey }}
+            {{- end }}
             {{- if .Values.extraEnvVars }}
             {{- .Values.extraEnvVars | nindent 12 }}
             {{- end }}
