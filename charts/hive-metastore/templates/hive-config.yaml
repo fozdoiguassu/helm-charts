@@ -3,7 +3,6 @@ kind: ConfigMap
 metadata:
   name: {{ include "hive-metastore.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "hive-metastore.name" . }}
     {{- include "hive-metastore.labels" . | nindent 4 }}
 data:
   hive-site.xml: |
