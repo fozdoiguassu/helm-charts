@@ -5,6 +5,18 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+        - name: check-postgresql
+          image: "ncsa/checks:1.0.0"
+          env:
+            - name: PGURI
+              value: "postgresql://{{- tpl .Values.connections.database.host . }}:{{- .Values.connections.database.port }}/{{- .Values.connections.database.database }}"
+            - name: PGUSER
+              value: "$DATABASE_USER"
+            - name: PGPASSWORD
+              value: "$DATABASE_PASSWORD"
+            - name: PGTABLE
+              value: "users"
       containers:
       - name: hivemeta
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
