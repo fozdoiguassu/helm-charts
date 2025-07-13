@@ -3,8 +3,8 @@
 ## Getting started
 
 ```
-helm repo add heva-helm-charts https://hevaweb.github.io/heva-helm-charts/
-helm search repo heva-helm-charts
+helm repo add helm-charts https://fozdoiguassu.github.io/helm-charts/
+helm search repo helm-charts
 ```
 
 ## Charts
